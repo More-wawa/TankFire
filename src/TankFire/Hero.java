@@ -1,11 +1,11 @@
 package TankFire;
 
 public class Hero extends Tank{
-    public Hero(int x, int y) {
-        super(x, y);
+    public Hero(int x, int y, int direction) {
+        super(x, y, direction, direction);
     }
 
-    public Hero(int x, int y, int spead) {
-        super(x, y, spead);
+    public Hero(int x, int y, int direction, int spead) {
+        super(x, y, direction, spead);
     }
 }
