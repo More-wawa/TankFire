@@ -2,32 +2,31 @@ package TankFire;
 
 public class Fire extends Movement implements Runnable {
     /*
-     * @param: x 子弹x坐标
+     * @param x 子弹x坐标
      * 
-     * @param: y 子弹y坐标
+     * @param y 子弹y坐标
      * 
-     * @param: direction 子弹方向
+     * @param direction 子弹方向
      * 
-     * @param: speed 子弹速度
+     * @param speed 子弹速度
      * 
-     * @param: isLive 子弹还是否存在
+     * @param isLive 子弹是否存在
+     * 
+     * @param type 子弹的发射者类型
      */
-    private int direction, speed = 2;
     private boolean isLive = true;
+    private int type;
 
-    public Fire(int x, int y, int direction) {
+    public Fire(int x, int y, int direction, int type) {
         super(x, y);
         this.direction = direction;
-    }
-
-    public Fire(int x, int y, int direction, int spead) {
-        this(x, y, direction);
-        this.speed = spead;
+        this.type = type;
     }
 
     @Override
     public void run() {
         while (true) {
+            System.out.println(x + " " + y);
             switch (direction) {
                 // Up
                 case 0:
@@ -47,12 +46,11 @@ public class Fire extends Movement implements Runnable {
                     break;
             }
 
-            // 子弹超出边界
-            if (x < 0 || x > 1000 || y < 0 || y > 750) {
+            // 子弹超出边界或击中
+            if (!isLive || x < 0 || x > 1000 || y < 0 || y > 750) {
                 isLive = false;
                 break;
             }
-            // 子弹击中
 
             try {
                 Thread.sleep(50);
@@ -78,8 +76,20 @@ public class Fire extends Movement implements Runnable {
         this.speed = speed;
     }
 
-    public boolean getIsLive() {
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public boolean isLive() {
         return isLive;
+    }
+
+    public void setLive(boolean isLive) {
+        this.isLive = isLive;
     }
 
 }

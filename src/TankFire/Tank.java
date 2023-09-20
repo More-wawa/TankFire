@@ -1,40 +1,47 @@
 package TankFire;
 
 public class Tank extends Movement {
-    protected int direction, spead = 1;
+    /*
+     * @param x 坦克左上角x坐标
+     * 
+     * @param y 坦克左上角y坐标
+     * 
+     * @param direction 坦克朝向
+     * 
+     * @param spead 坦克移动速度
+     * 
+     * @param isLive 是否存活
+     */
     protected Fire fire;
+    protected boolean isLive = true;
 
     public Tank(int x, int y, int direction) {
         super(x, y);
         this.direction = direction;
     }
 
-    public Tank(int x, int y, int direction, int spead) {
+    public Tank(int x, int y, int direction, int speed) {
         this(x, y, direction);
-        this.spead = spead;
+        this.speed = speed;
     }
 
-    public void fireEnemyTank() {
+    public void fire() {
         switch (direction) {
             // Up
             case 0:
-                // new Thread(new Fire(x + 20, y, direction)).start();
-                fire = new Fire(x + 20, y, direction);
+                Hero.heroFires.add(fire = new Fire(x + 20, y, direction, 0));
                 break;
             // Right
             case 1:
-                // new Thread(new Fire(x + 60, y + 20, direction)).start();
-                fire = new Fire(x + 60, y + 20, direction);
+                Hero.heroFires.add(fire = new Fire(x + 60, y + 20, direction, 0));
                 break;
             // Down
             case 2:
-                // new Thread(new Fire(x + 20, y + 60, direction)).start();
-                fire = new Fire(x + 20, y + 60, direction);
+                Hero.heroFires.add(fire = new Fire(x + 20, y + 60, direction, 0));
                 break;
             // Left
             case 3:
-                // new Thread(new Fire(x, y + 20, direction)).start();
-                fire = new Fire(x, y + 20, direction);
+                Hero.heroFires.add(fire = new Fire(x, y + 20, direction, 0));
                 break;
         }
         new Thread(fire).start();
@@ -49,10 +56,20 @@ public class Tank extends Movement {
     }
 
     public int getSpeed() {
-        return spead;
+        return speed;
     }
 
     public void setSpeed(int speed) {
-        this.spead = speed;
+        this.speed = speed;
     }
+
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public void setLive(boolean isLive) {
+        this.isLive = isLive;
+    }
+
+
 }

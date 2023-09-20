@@ -1,27 +1,27 @@
 package TankFire;
 
 public class Movement {
-    protected int x, y;
+    protected int x, y, direction, speed = 2;
 
     public Movement(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void moveUp(int spead) {
-        y -= spead;
+    public void moveUp(int speed) {
+        y -= speed;
     }
 
-    public void moveRight(int spead) {
-        x += spead;
+    public void moveRight(int speed) {
+        x += speed;
     }
 
-    public void moveDown(int spead) {
-        y += spead;
+    public void moveDown(int speed) {
+        y += speed;
     }
 
-    public void moveLeft(int spead) {
-        x -= spead;
+    public void moveLeft(int speed) {
+        x -= speed;
     }
 
     public int getX() {
