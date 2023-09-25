@@ -25,28 +25,6 @@ public class Tank extends Movement {
         this.speed = speed;
     }
 
-    public void fire() {
-        switch (direction) {
-            // Up
-            case 0:
-                Hero.heroFires.add(fire = new Fire(x + 20, y, direction, 0));
-                break;
-            // Right
-            case 1:
-                Hero.heroFires.add(fire = new Fire(x + 60, y + 20, direction, 0));
-                break;
-            // Down
-            case 2:
-                Hero.heroFires.add(fire = new Fire(x + 20, y + 60, direction, 0));
-                break;
-            // Left
-            case 3:
-                Hero.heroFires.add(fire = new Fire(x, y + 20, direction, 0));
-                break;
-        }
-        new Thread(fire).start();
-    }
-
     public int getDirection() {
         return direction;
     }
@@ -70,6 +48,5 @@ public class Tank extends Movement {
     public void setLive(boolean isLive) {
         this.isLive = isLive;
     }
-
 
 }

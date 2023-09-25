@@ -20,13 +20,16 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
     private Hero hero;
     private Vector<EnemyTank> enemyTanks = new Vector<>();
     private int EnemyTankCount = 3;
+    private EnemyTank enemyTank;
+    private Fire fire;
 
     public MyPanel() {
         // 初始化主角
-        hero = new Hero(100, 100, 0);
+        hero = new Hero(000, 100, 0);
         // 初始化敌人坦克
         for (int i = 1; i <= EnemyTankCount; i++) {
-            enemyTanks.add(new EnemyTank(100 * i, 0, 2));
+            enemyTanks.add(enemyTank = new EnemyTank(100 * i, 0, (int)(Math.random() * 4)));
+            new Thread(enemyTank).start();
         }
     }
 
@@ -36,91 +39,49 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
         switch (e.getKeyCode()) {
             // Up
             case KeyEvent.VK_W:
-                hero.setDirection(0);
-                hero.moveUp(hero.getSpeed());
+                if (Movement.isMoveable(hero.getX(), hero.getY(), 0, hero.getSpeed())) {
+                    hero.setDirection(0);
+                    hero.moveUp(hero.getSpeed());
+                }
                 break;
             // Right
             case KeyEvent.VK_D:
-                hero.setDirection(1);
-                hero.moveRight(hero.getSpeed());
+                if (Movement.isMoveable(hero.getX(), hero.getY(), 1, hero.getSpeed())) {
+                    hero.setDirection(1);
+                    hero.moveRight(hero.getSpeed());
+                }
                 break;
             // Down
             case KeyEvent.VK_S:
-                hero.setDirection(2);
-                hero.moveDown(hero.getSpeed());
+                if (Movement.isMoveable(hero.getX(), hero.getY(), 2, hero.getSpeed())) {
+                    hero.setDirection(2);
+                    hero.moveDown(hero.getSpeed());
+                }
                 break;
             // Left
             case KeyEvent.VK_A:
-                hero.setDirection(3);
-                hero.moveLeft(hero.getSpeed());
+                if (Movement.isMoveable(hero.getX(), hero.getY(), 3, hero.getSpeed())) {
+                    hero.setDirection(3);
+                    hero.moveLeft(hero.getSpeed());
+                }
                 break;
             // Hero fire
             case KeyEvent.VK_J:
-                hero.fire();
+                if (Hero.fires.size() < 5)
+                    hero.heroFire();
                 break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        // 绘制背景色
-        g.fillRect(0, 0, 1000, 750);
-
-        // 绘制主角子弹
-        Fire fire;
-        for (int iHeroFire = Hero.heroFires.size() - 1; iHeroFire >= 0; iHeroFire--) {
-            fire = Hero.heroFires.get(iHeroFire);
-            // 判断子弹是否击中敌人坦克
-            for (int iEnemyTank = enemyTanks.size() - 1; iEnemyTank >= 0; iEnemyTank--) {
-                if (isHitTank(fire, enemyTanks.get(iEnemyTank))) {
-                    Hero.heroFires.remove(iHeroFire);
-                    enemyTanks.remove(iEnemyTank);
-                }
-            }
-            if (fire.isLive()) {
-                drawFire(fire.getX(), fire.getY(), g, 0);
-            }
-        }
-
-        // 绘制敌人坦克子弹
-        for (EnemyTank enemyTank : enemyTanks) {
-            for (int i = enemyTank.getEnemyFires().size() - 1; i >= 0; i--) {
-                fire = enemyTank.getEnemyFires().get(i);
-                if (isHitTank(fire, hero)) {
-                    System.out.println("GG");
-                    return;
-                }
-                drawFire(fire.getX(), fire.getY(), g, 1);
-            }
-        }
-
-        // 绘制主角
-        drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 0);
-
-        // 绘制敌人坦克
-        for (EnemyTank enemyTank : enemyTanks) {
-            drawTank(enemyTank.getX(), enemyTank.getY(), g, enemyTank.getDirection(), 1);
-        }
     }
 
     // 绘制坦克
-    /*
-     * @param type 坦克的类型
-     */
     public void drawTank(int x, int y, Graphics g, int direction, int type) {
         if (type == 0) {
             g.setColor(Color.cyan);
@@ -164,6 +125,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
+    // 绘制子弹
     public void drawFire(int x, int y, Graphics g, int type) {
         if (type == 0) {
             g.setColor(Color.cyan);
@@ -173,20 +135,78 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
         g.fillOval(x, y, 5, 5);
     }
 
-    // 子弹是否击中坦克
-    public static boolean isHitTank(Fire fire, Tank tank) {
-        int xFire = fire.getX(), yFire = fire.getY(), xTank = tank.getX(), yTank = tank.getY();
-        if (xFire >= xTank && xFire <= xTank + 40 && yFire >= yTank && yFire <= yTank + 60) {
-            fire.setLive(false);
-            return true;
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        // 绘制背景色
+        g.fillRect(0, 0, 1000, 750);
+
+        // 绘制主角
+        drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 0);
+
+        // 绘制敌人坦克
+        for (EnemyTank enemyTank : enemyTanks) {
+            drawTank(enemyTank.getX(), enemyTank.getY(), g, enemyTank.getDirection(), 1);
         }
-        return false;
+
+        // 绘制主角子弹
+        for (Fire heroFire : Hero.fires) {
+            drawFire(heroFire.getX(), heroFire.getY(), g, 0);
+        }
+
+        // 绘制敌人坦克子弹
+        for (EnemyTank enemyTank : enemyTanks) {
+            for (Fire fire : enemyTank.getFires()) {
+                drawFire(fire.getX(), fire.getY(), g, 1);
+            }
+        }
     }
 
-    // 刷新界面
     @Override
     public void run() {
-        while (true) {
+        while (hero.isLive()) {
+            // 敌人发射子弹
+            for (EnemyTank enemyTank : enemyTanks) {
+                if (enemyTank.getFires().size() < 1) {
+                    enemyTank.enemyFire();
+                }
+            }
+
+            // 主角子弹
+            for (int iHeroFire = Hero.fires.size() - 1; iHeroFire >= 0; iHeroFire--) {
+                fire = Hero.fires.get(iHeroFire);
+                // 主角子弹是否超出边界
+                if (fire.getX() < 0 || fire.getX() > 1000 || fire.getY() < 0 || fire.getY() > 750) {
+                    Hero.fires.remove(iHeroFire);
+                } else {
+                    // 主角子弹是否击中敌人
+                    for (int iEnemy = enemyTanks.size() - 1; iEnemy >= 0; iEnemy--) {
+                        if (Fire.isHitTank(fire, enemyTanks.get(iEnemy))) {
+                            Hero.fires.remove(iHeroFire);
+                            enemyTanks.remove(iEnemy);
+                        }
+                    }
+                }
+            }
+
+            // 敌人子弹
+            for (EnemyTank enemyTank : enemyTanks) {
+                for (int i = enemyTank.getFires().size() - 1; i >= 0; i--) {
+                    fire = enemyTank.getFires().get(i);
+                    // 敌人子弹是否超出边界
+                    if (fire.getX() < 0 || fire.getX() > 1000 || fire.getY() < 0 || fire.getY() > 750) {
+                        enemyTank.getFires().remove(i);
+                    } else {
+                        // 敌人子弹是否击中主角
+                        if (Fire.isHitTank(fire, hero)) {
+                            System.out.println("GG");
+                            hero.isLive = false;
+                        }
+                    }
+                }
+            }
+
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {

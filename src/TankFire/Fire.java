@@ -10,11 +10,8 @@ public class Fire extends Movement implements Runnable {
      * 
      * @param speed 子弹速度
      * 
-     * @param isLive 子弹是否存在
-     * 
      * @param type 子弹的发射者类型
      */
-    private boolean isLive = true;
     private int type;
 
     public Fire(int x, int y, int direction, int type) {
@@ -23,33 +20,35 @@ public class Fire extends Movement implements Runnable {
         this.type = type;
     }
 
+    // 子弹是否击中坦克
+    public static boolean isHitTank(Fire fire, Tank tank) {
+        int xFire = fire.getX(), yFire = fire.getY(), xTank = tank.getX(), yTank = tank.getY();
+        if (xFire >= xTank && xFire <= xTank + 40 && yFire >= yTank && yFire <= yTank + 60) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         while (true) {
-            System.out.println(x + " " + y);
             switch (direction) {
                 // Up
                 case 0:
-                    this.moveUp(speed);
+                    moveUp(speed);
                     break;
                 // Right
                 case 1:
-                    this.moveRight(speed);
+                    moveRight(speed);
                     break;
                 // Down
                 case 2:
-                    this.moveDown(speed);
+                    moveDown(speed);
                     break;
                 // Left
                 case 3:
-                    this.moveLeft(speed);
+                    moveLeft(speed);
                     break;
-            }
-
-            // 子弹超出边界或击中
-            if (!isLive || x < 0 || x > 1000 || y < 0 || y > 750) {
-                isLive = false;
-                break;
             }
 
             try {
@@ -82,14 +81,6 @@ public class Fire extends Movement implements Runnable {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public boolean isLive() {
-        return isLive;
-    }
-
-    public void setLive(boolean isLive) {
-        this.isLive = isLive;
     }
 
 }
