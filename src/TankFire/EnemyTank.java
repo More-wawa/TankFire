@@ -41,7 +41,7 @@ public class EnemyTank extends Tank implements Runnable {
     @Override
     public void run() {
         while (isLive) {
-            // 每过30步随机换一个方向
+            // 每过30步随机换一个方向并发射子弹
             for (int i = 0; i < 30; i++) {
                 try {
                     Thread.sleep(50);
@@ -71,6 +71,7 @@ public class EnemyTank extends Tank implements Runnable {
                         break;
                 }
             }
+            enemyFire();
             direction = (int) (Math.random() * 4);
         }
     }

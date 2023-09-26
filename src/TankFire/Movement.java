@@ -1,7 +1,7 @@
 package TankFire;
 
 public class Movement {
-    protected int x, y, direction, speed = 2;
+    protected int x, y, direction, speed;
 
     public Movement(int x, int y) {
         this.x = x;
@@ -12,22 +12,22 @@ public class Movement {
         switch (direction) {
             // Up
             case 0:
-                if (y - speed > 0)
+                if (y - speed >= 0)
                     return true;
                 break;
             // Right
             case 1:
-                if (x + 60 - speed < 1000)
+                if (x + 60 + speed <= 1000)
                     return true;
                 break;
             // Down
             case 2:
-                if (y + 60 + speed < 750)
+                if (y + 60 + speed <= 750)
                     return true;
                 break;
             // Left
             case 3:
-                if (x - speed > 0)
+                if (x - speed >= 0)
                     return true;
                 break;
         }

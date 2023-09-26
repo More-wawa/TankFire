@@ -13,6 +13,7 @@ public class Tank extends Movement {
      * @param isLive 是否存活
      */
     protected Fire fire;
+    protected int speed = 2;
     protected boolean isLive = true;
 
     public Tank(int x, int y, int direction) {

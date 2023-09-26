@@ -25,10 +25,10 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
 
     public MyPanel() {
         // 初始化主角
-        hero = new Hero(000, 100, 0);
+        hero = Hero.getHero();
         // 初始化敌人坦克
         for (int i = 1; i <= EnemyTankCount; i++) {
-            enemyTanks.add(enemyTank = new EnemyTank(100 * i, 0, (int)(Math.random() * 4)));
+            enemyTanks.add(enemyTank = new EnemyTank(100 * i, 0, (int) (Math.random() * 4)));
             new Thread(enemyTank).start();
         }
     }
@@ -146,18 +146,22 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 0);
 
         // 绘制敌人坦克
-        for (EnemyTank enemyTank : enemyTanks) {
+        for (int iEnemy = 0; iEnemy < enemyTanks.size(); iEnemy++) {
+            enemyTank = enemyTanks.get(iEnemy);
             drawTank(enemyTank.getX(), enemyTank.getY(), g, enemyTank.getDirection(), 1);
         }
 
         // 绘制主角子弹
-        for (Fire heroFire : Hero.fires) {
-            drawFire(heroFire.getX(), heroFire.getY(), g, 0);
+        for (int iHeroFire = 0; iHeroFire < Hero.fires.size(); iHeroFire++) {
+            fire = Hero.fires.get(iHeroFire);
+            drawFire(fire.getX(), fire.getY(), g, 0);
         }
 
         // 绘制敌人坦克子弹
-        for (EnemyTank enemyTank : enemyTanks) {
-            for (Fire fire : enemyTank.getFires()) {
+        for (int iEnemy = 0; iEnemy < enemyTanks.size(); iEnemy++) {
+            enemyTank = enemyTanks.get(iEnemy);
+            for (int iEnemyFire = 0; iEnemyFire < enemyTank.getFires().size(); iEnemyFire++) {
+                fire = enemyTank.getFires().get(iEnemyFire);
                 drawFire(fire.getX(), fire.getY(), g, 1);
             }
         }
@@ -166,13 +170,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
     @Override
     public void run() {
         while (hero.isLive()) {
-            // 敌人发射子弹
-            for (EnemyTank enemyTank : enemyTanks) {
-                if (enemyTank.getFires().size() < 1) {
-                    enemyTank.enemyFire();
-                }
-            }
-
             // 主角子弹
             for (int iHeroFire = Hero.fires.size() - 1; iHeroFire >= 0; iHeroFire--) {
                 fire = Hero.fires.get(iHeroFire);
@@ -191,7 +188,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
             }
 
             // 敌人子弹
-            for (EnemyTank enemyTank : enemyTanks) {
+            for (int iEnemy = 0; iEnemy < enemyTanks.size(); iEnemy++) {
+                enemyTank = enemyTanks.get(iEnemy);
                 for (int i = enemyTank.getFires().size() - 1; i >= 0; i--) {
                     fire = enemyTank.getFires().get(i);
                     // 敌人子弹是否超出边界

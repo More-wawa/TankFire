@@ -13,6 +13,7 @@ public class Fire extends Movement implements Runnable {
      * @param type 子弹的发射者类型
      */
     private int type;
+    private int speed = 5;
 
     public Fire(int x, int y, int direction, int type) {
         super(x, y);

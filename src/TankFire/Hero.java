@@ -7,13 +7,14 @@ public class Hero extends Tank {
      * param fires 主角的子弹数组
      */
     public static Vector<Fire> fires = new Vector<>();
+    private static Hero hero = new Hero(0, 100, 0);
 
-    public Hero(int x, int y, int direction) {
+    private Hero(int x, int y, int direction) {
         super(x, y, direction);
     }
 
-    public Hero(int x, int y, int direction, int spead) {
-        super(x, y, direction, spead);
+    public static Hero getHero() {
+        return hero;
     }
 
     public void heroFire() {
