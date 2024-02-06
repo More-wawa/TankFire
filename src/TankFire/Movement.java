@@ -8,6 +8,11 @@ public class Movement {
         this.y = y;
     }
 
+    public Movement(int x, int y, int direction) {
+        this(x, y);
+        this.direction = direction;
+    }
+
     public static boolean isMoveable(int x, int y, int direction, int speed) {
         switch (direction) {
             // Up

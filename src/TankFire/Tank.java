@@ -8,7 +8,7 @@ public class Tank extends Movement {
      * 
      * @param direction 坦克朝向
      * 
-     * @param spead 坦克移动速度
+     * @param speed 坦克移动速度
      * 
      * @param isLive 是否存活
      */
@@ -17,12 +17,11 @@ public class Tank extends Movement {
     protected boolean isLive = true;
 
     public Tank(int x, int y, int direction) {
-        super(x, y);
-        this.direction = direction;
+        super(x, y, direction);
     }
 
     public Tank(int x, int y, int direction, int speed) {
-        this(x, y, direction);
+        super(x, y, direction);
         this.speed = speed;
     }
 

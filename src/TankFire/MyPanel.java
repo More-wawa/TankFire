@@ -19,7 +19,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
      */
     private Hero hero;
     private Vector<EnemyTank> enemyTanks = new Vector<>();
-    private int EnemyTankCount = 3;
+    private int enemyTankCount = 3;
     private EnemyTank enemyTank;
     private Fire fire;
 
@@ -27,7 +27,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
         // 初始化主角
         hero = Hero.getHero();
         // 初始化敌人坦克
-        for (int i = 1; i <= EnemyTankCount; i++) {
+        for (int i = 1; i <= enemyTankCount; i++) {
             enemyTanks.add(enemyTank = new EnemyTank(100 * i, 0, (int) (Math.random() * 4)));
             new Thread(enemyTank).start();
         }
@@ -169,7 +169,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void run() {
-        while (hero.isLive()) {
+        while (hero.isLive() && enemyTanks.size() > 0) {
             // 主角子弹
             for (int iHeroFire = Hero.fires.size() - 1; iHeroFire >= 0; iHeroFire--) {
                 fire = Hero.fires.get(iHeroFire);
